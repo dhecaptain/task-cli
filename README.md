@@ -1,12 +1,10 @@
-
-```markdown
 # Task CLI - Python Task Management System
+![Task List View](screenshots/show_task.png)
+*Main interface showing task management capabilities*
+```markdown
 
 ## Overview
 A robust CLI task management system built by a Computer Science student focusing on Django, DevOps, and Data Science. This project demonstrates Python best practices and software architecture principles.
-
-![Task List View](screenshots/show_task.png)
-*Main interface showing task management capabilities*
 
 ## Quick Start
 ```bash
