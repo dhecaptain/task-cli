@@ -168,6 +168,9 @@ This project aligns with my development journey:
 3. Data analytics features
 4. React frontend interface
 
+## Project URL
+[Task CLI GitHub Page](https://roadmap.sh/projects/task-tracker)
+
 ## Author
 Polycarp
 - 🎓 Computer Science Student (3rd Year)
