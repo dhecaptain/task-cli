@@ -1,186 +1,198 @@
-# task-cli
-
 
 ```markdown
-# Advanced Todo CLI Application
+# Task CLI - Python Task Management System
 
-A powerful command-line interface (CLI) todo application built with Python, featuring priority levels, categories, due dates, and status tracking. This project demonstrates clean code architecture, SQLite database management, and modern Python practices.
+## Overview
+A robust CLI task management system built by a Computer Science student focusing on Django, DevOps, and Data Science. This project demonstrates Python best practices and software architecture principles.
 
-## Features
+![Task List View](screenshots/show_task.png)
+*Main interface showing task management capabilities*
 
-- ✨ Task management with priorities (High, Medium, Low)
-- 📂 Category organization
-- 📅 Due date tracking
-- 🔄 Status tracking (Todo, In Progress, Completed)
-- 📊 Task statistics
-- 🎨 Rich terminal interface with colored output
-- 💾 Persistent storage using SQLite
-
-## Requirements
-
-- Python 3.7+
-- pip (Python package installer)
-
-## Installation
-
-1. Clone the repository:
+## Quick Start
 ```bash
+# Clone repository
 git clone https://github.com/dhecaptain/task-cli.git
 cd task-cli
-```
 
-2. Create a virtual environment (recommended):
-```bash
+# Set up virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-3. Install dependencies:
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-## Usage
+## Core Features
+1. 📌 Priority-based task management
+2. 📂 Category organization
+3. ⏰ Due date tracking
+4. 🔄 Status workflow (Todo → In Progress → Completed)
+5. 📊 Task analytics
+6. 💾 SQLite persistence
 
-### Basic Commands
+## Code Structure
 
-1. **Add a new task:**
-```bash
-python todocli.py add "Task description" "Category" --priority 1 --due "2024-12-31"
+### 1. Models (`models.py`)
+```python
+# Core data structures and enums
+from enum import Enum
+from dataclasses import dataclass
+
+class TodoStatus(Enum):
+    TODO = 1
+    IN_PROGRESS = 2
+    COMPLETED = 3
+
+class Priority(Enum):
+    HIGH = 1
+    MEDIUM = 2
+    LOW = 3
+
+@dataclass
+class Todo:
+    task: str
+    category: str
+    priority: Priority
+    # ... other fields
 ```
-Priority levels:
-- 1: High
-- 2: Medium
-- 3: Low (default)
 
-2. **Show all tasks:**
+### 2. Database Operations (`database.py`)
+```python
+# Database management and operations
+class DatabaseConnection:
+    def __init__(self, db_name='todos.db'):
+        self.db_name = db_name
+
+    # Context manager methods
+    def __enter__(self):
+        self.conn = sqlite3.connect(self.db_name)
+        return self.conn
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.conn.close()
+
+# Core database operations
+@safe_database_operation
+def insert_todos(todo: Todo) -> bool:
+    # Insert implementation
+
+@safe_database_operation
+def get_all_todos() -> List[Todo]:
+    # Retrieval implementation
+
+# ... other database operations
+```
+
+### 3. CLI Interface (`todocli.py`)
+```python
+# Command-line interface implementation
+import typer
+from rich.console import Console
+
+app = typer.Typer()
+console = Console()
+
+@app.command()
+def add(task: str, category: str, priority: int = 3):
+    """Add a new task"""
+    # Implementation
+
+@app.command()
+def show():
+    """Display all tasks"""
+    # Implementation
+
+# ... other CLI commands
+```
+
+## Usage Examples
+
+### 1. Task Management
 ```bash
+# Add new task
+python todocli.py add "Learn Django REST" "Programming" --priority 1 --due "2024-12-31"
+
+# View tasks
 python todocli.py show
+
+# Complete task
+python todocli.py complete 1
 ```
+![Task Completion](screenshots/complete_task.png)
 
-3. **Complete a task:**
+### 2. Task Progress
 ```bash
-python todocli.py complete 1  # Complete task at position 1
+# Mark as in progress
+python todocli.py progress 1
 ```
+![Progress Update](screenshots/progress_task.png)
 
-4. **Mark task as in progress:**
+### 3. Task Analysis
 ```bash
-python todocli.py progress 1  # Mark task 1 as in progress
-```
-
-5. **Delete a task:**
-```bash
-python todocli.py delete 1  # Delete task at position 1
-```
-
-### Advanced Commands
-
-1. **Update task details:**
-```bash
-python todocli.py update 1 --task "New description" --category "New category" --priority 2 --due "2024-12-31"
-```
-
-2. **Filter tasks by status:**
-```bash
-python todocli.py list-by-status todo
-python todocli.py list-by-status in-progress
-python todocli.py list-by-status done
-```
-
-3. **Filter tasks by category:**
-```bash
-python todocli.py list-by-category "Study"
-```
-
-4. **Filter tasks by priority:**
-```bash
-python todocli.py list-by-priority 1  # Show high priority tasks
-```
-
-5. **View statistics:**
-```bash
+# View statistics
 python todocli.py stats
 ```
-
-## Project Structure
-
-```
-todo-cli/
-├── todocli.py      # Main CLI application
-├── database.py     # Database operations
-├── models.py       # Data models and enums
-├── requirements.txt
-└── todos.db        # SQLite database file
-```
+![Statistics View](screenshots/stats_task.png)
 
 ## Database Schema
-
-The application uses SQLite with the following table structure:
-
 ```sql
 CREATE TABLE todos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     task TEXT NOT NULL,
     category TEXT NOT NULL,
-    date_added TEXT NOT NULL,
-    date_completed TEXT,
     status INTEGER NOT NULL,
-    position INTEGER,
-    due_date TEXT,
     priority INTEGER NOT NULL,
+    -- Additional fields
     CONSTRAINT status_check CHECK (status IN (1,2,3)),
     CONSTRAINT priority_check CHECK (priority IN (1,2,3))
 )
 ```
 
-## Error Handling
+## Development Stack
+- **Core**: Python 3.7+
+- **CLI Framework**: Typer
+- **UI Enhancement**: Rich
+- **Database**: SQLite3
+- **Version Control**: Git
 
-The application includes comprehensive error handling for:
-- Database operations
-- Invalid input validation
-- Priority and status constraints
-- Date format validation
+## Learning Path Integration
+This project aligns with my development journey:
+- ✅ Python & Django fundamentals
+- 🔄 Database design principles
+- 📚 Clean code architecture
+- 🎯 Moving towards DevOps & Data Science
 
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## Dependencies
-
-- typer: For creating the CLI interface
-- rich: For terminal formatting and colors
-- sqlite3: For database management
-- python-dateutil: For date handling
-
-## Development
-
-To set up the development environment:
-
-1. Install development dependencies:
-```bash
-pip install -r requirements-dev.txt
-```
-
-2. Run tests:
-```bash
-python -m pytest tests/
-```
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Future Enhancements
+1. Django REST API integration
+2. Docker containerization
+3. Data analytics features
+4. React frontend interface
 
 ## Author
+Polycarp
+- 🎓 Computer Science Student (3rd Year)
+- 💻 Aspiring Django Developer → DevOps → Data Scientist
+- 🔗 GitHub: [@dhecaptain](https://github.com/dhecaptain)
 
-Your Name
-- GitHub: [@dhecaptain](https://github.com/dhecaptain)
+## Installation Requirements
+```bash
+# Core dependencies
+pip install typer
+pip install rich
+pip install python-dateutil
 
-## Acknowledgments
+# Development dependencies
+pip install pytest
+pip install black
+```
 
-- Inspired by modern task management applications
-- Built with Python best practices and clean architecture principles
+## Contributing
+1. Fork repository
+2. Create feature branch
+3. Commit changes
+4. Push to branch
+5. Create Pull Request
+
+## License
+MIT License - See LICENSE file
 ```
